@@ -1,42 +1,71 @@
 (define-library (sulfuric util)
   (import (scheme base)
-          (scheme case-lambda))
+          (scheme case-lambda)
+          (scheme write)
+          (picrin macro))
   (begin
-    (define-syntax define-record-type-with-accessors
+    (define (make-accessor slot-name r)
+      (list slot-name slot-name (string->symbol (string-append "set-" (symbol->string slot-name) "!")))))
+
+  (begin
     
-      (let ((make-accessor (lambda (slot-name)
-                             (list slot-name slot-name (string-append "set-" (symbol->string slot-name) "!")))))
-        (er-macro-transformer
-         (lambda (form r c)
-           (let ((name (car (cdr form)))
-                 (constructor (car (cdr (cdr form))))
-                 (pred (car (cdr (cdr (cdr form)))))
-                 (slots (car (cdr (cdr (cdr (cdr form)))))))
-             `(,(r 'define-record-type) ,name
-               ,constructor
-               ,pred
-               ,@(map make-accessor slots)))))))
+    (define-syntax define-record-type-with-accessors
+      (er-macro-transformer
+       (lambda (form r c)
+         (let ((name (car (cdr form)))
+               (constructor (car (cdr (cdr form))))
+               (pred (car (cdr (cdr (cdr form)))))
+               (slots (cdr (cdr (cdr (cdr form))))))
+           `(,(r 'define-record-type) ,name
+             ,constructor
+             ,pred
+             ,@(map (lambda (name) (make-accessor name r)) slots))))))
 
-    (define (push! atom lst)
-      (set-cdr! lst lst)
-      (set-car! lst atom))
+    (define-syntax push!
+      (syntax-rules ()
+        ((_ atom lst)
+         (if (null? lst)
+             (set! lst (list atom))
+             (begin
+               (set-cdr! lst (cons (car lst) (cdr lst)))
+               (set-car! lst atom))))))
 
-    (define (pop! lst)
-      (let ((atom (car lst)))
-        (set-car! (car (cdr lst)))
-        (set-cdr! (cdr (cdr lst)))
-        atom))
+    (define-syntax pop!
+      (syntax-rules ()
+        ((_ lst)
+         (cond
+          ((null? lst) (error "pop!: pair required but got ()"))
+          ((null? (cdr lst))
+           (let ((atom (car lst)))
+             (set! lst ())
+             atom))
+          (else (let ((atom (car lst)))
+                  (set-car! lst (car (cdr lst)))
+                  (set-cdr! lst (cdr (cdr lst)))
+                  atom))))))
 
-    (define (extract! pred lst)
-      (let loop ((rest lst) (acc ()))
-        (if (null? lst)
-            acc
-            (let ((atom (car lst)))
-              (if (pred atom)
-                  (begin
-                    (pop! rest)
-                    (loop rest (cons atom acc)))
-                  (loop (cdr rest) acc))))))
+    (define-syntax extract!
+      (syntax-rules ()
+        ((_ pred lst)
+         (cond
+          ((null? lst) ())
+          ((null? (cdr lst))
+           (let ((atom (car lst)))
+             (if (pred atom)
+                 (begin
+                   (set! lst ())
+                   (list atom))
+                 ())))
+          (else
+           (let loop ((rest (cdr lst)) (parent lst) (acc ()))
+             (if (null? rest)
+                 (reverse acc)
+                 (let ((atom (car rest)))
+                   (if (pred atom)
+                       (begin
+                         (set-cdr! parent (cdr rest))
+                         (loop (cdr rest) parent (cons atom acc)))
+                       (loop (cdr rest) (cdr parent) acc))))))))))
 
     (define position
       (case-lambda
@@ -48,9 +77,9 @@
         (let loop ((i start))
           (if (= i end)
               #f
-              (if (char= char (string-ref))
+              (if (eqv? char (string-ref))
                   i
-                  (loop (+ i 1) acc)))))))
+                  (loop (+ i 1))))))))
 
     (define positions
       (case-lambda
@@ -58,7 +87,7 @@
         (positions char string 0 (length string)))
        ((char string start)
         (positions char string start (length string)))
-       ((char string strat end)
+       ((char string start end)
         (let loop ((i start) (acc ()))
           (let ((pos (position char string i end)))
             (if pos
@@ -73,7 +102,7 @@
             (reverse acc)))))
 
   (define (always? pred? list)
-    (let loop ((rest lists))
+    (let loop ((rest list))
       (if (null? rest)
           #t
           (if (pred? (car rest))
