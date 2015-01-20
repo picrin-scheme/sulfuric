@@ -65,9 +65,17 @@
 (test (list 0) (positions #\a "aabcd" 0 1))
 (test () (positions #\a "bcd" 0 1))
 
-(test (list "1" "2" "3") (string-split #\, "1.2.3"))
-(test (list "1,2,3") (string-split #\, "1,2,3"))
-(test (list "")  (string-split #\, ""))
+(test (list "1" "2" "3") (string-split #\. "1.2.3"))
+(test (list "1,2,3") (string-split #\. "1,2,3"))
+(test (list "")  (string-split #\. ""))
+
+(test #t (always? even? (list 2 4 6 8)))
+(test #f (always? even? (list 2 4 6 7)))
+(test #t (always? even? ()))
+
+(test #f (some? odd? (list 2 4 6 8)))
+(test #t (some? odd? (list 2 4 6 7)))
+(test #f (some? odd? ()))
 
 (test-end)
 
