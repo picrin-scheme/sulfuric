@@ -134,4 +134,5 @@
           string-split
           always?
           some?
-          zip))
+          zip
+          fold))
