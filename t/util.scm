@@ -77,5 +77,13 @@
 (test #t (some? odd? (list 2 4 6 7)))
 (test #f (some? odd? ()))
 
+(test (list (list 1 1.0 "a") (list 2 2.0 "b") (list 3 3.0 "c"))
+      (zip (list 1 2 3) (list 1.0 2.0 3.0) (list "a" "b" "c")))
+(test (list ) (zip () () ()))
+(test () (zip ()))
+
+(test 15 (fold + 0 (list 1 2 3 4 5)))
+(test 0 (fold + 0 ()))
+
 (test-end)
 
