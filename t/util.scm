@@ -46,6 +46,10 @@
 (test (list 2 4 6 8 10) (extract! even? lst))
 (test (list 1 3 5 7 9) lst)
 
+(set! lst (list 1 2 3 4 5 6 7 8 9 10))
+(test (list 1 3 5 7 9) (extract! odd? lst))
+(test (list 2 4 6 8 10) lst)
+
 (test 0  (position #\a "abcd"))
 (test 0  (position #\a "aabcd"))
 (test 1  (position #\a "aabcd" 1))
