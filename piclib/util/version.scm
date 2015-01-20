@@ -41,9 +41,10 @@
                (loop (cdr v1) (cdr v2))))))))
 
     (define (/= x y) (not (= x y)))
+    (define (id x) x)
 
-    (define (version= v1 v2)
-      (alyways? (map string= (version->list v1) (version->list v2))))
+    (define (version= v1 v2)     
+      (always? id (map = (version->list v1) (version->list v2))))
     (define version/=
       (make-version-comparator /= #f))
     (define version>
