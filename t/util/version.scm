@@ -56,3 +56,4 @@
 (test "1.2.3" (version->string (string->version "1.2.3")))
 (test (list 1 2 3) (version->list (string->version "1.2.3")))
 
+(test-end)
