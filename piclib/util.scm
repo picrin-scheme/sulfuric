@@ -95,11 +95,11 @@
                 (reverse acc))))))))
 
   (define (string-split char string)
-    (let ((len (length string)))
+    (let ((len (string-length string)))
       (let loop ((start 0) (end (position char string 0 len)) (acc ()))
         (if end
             (loop (+ end 1) (position char string (+ end 1) len) (cons (substring string start end) acc))
-            (reverse acc)))))
+            (reverse (cons (substring string start) acc))))))
 
   (define (always? pred? list)
     (let loop ((rest list))
