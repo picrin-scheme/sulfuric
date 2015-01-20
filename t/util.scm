@@ -89,5 +89,9 @@
 (test 15 (fold + 0 (list 1 2 3 4 5)))
 (test 0 (fold + 0 ()))
 
+(test "1.2.3" (string-join "." (list "1" "2" "3")))
+(test "123" (string-join "" (list "1" "2" "3")))
+(test "" (string-join "" (list)))
+
 (test-end)
 
