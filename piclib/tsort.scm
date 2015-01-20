@@ -1,5 +1,6 @@
 (define-library (sulfuric tsort)
   (import (scheme base)
+          (scheme write)
           (sulfuric util))
 
   (define-record-type-with-accessors <vertex>
@@ -49,21 +50,27 @@
                  (dependencies (cdr entry)))
             (for-each
              (lambda (dep)
-               (update-or-add dep (lambda (v) (depend-vertex! v dep)) acc)))
-            (update-or-add name (lambda (v) (set-ndepends! v (length dependencies))))
+               (update-or-add dep (lambda (v) (depend-vertex! v name)) acc))
+             dependencies)
+            (update-or-add name (lambda (v) (set-ndepends! v (length dependencies))) acc)
             (loop (cdr rest) acc)))))
 
-  (define (extract-free! vs)
-    (extract! (lambda (v) (= 0 (ndepends v))) v))
+  (define-syntax extract-free!
+    (syntax-rules ()
+      ((_ vs)
+       (extract! (lambda (v)
+                   (= 0 (ndepends v))) vs))))
 
   (define (tsort input)
     (let ((vs (init input)))
       (let loop ((sorted ()))
         (if (null? vs)
-            (reverse sorted)
-            (let ((frees (extract-free! rest)))
+            (map name (reverse sorted))
+            (let ((frees (extract-free! vs)))
               (for-each
                (lambda (v)
                  (undepend-vertex! v vs))
                frees)
-              (loop (append frees sorted))))))))
+              (loop (append frees sorted))
+              )))))
+  (export tsort))
