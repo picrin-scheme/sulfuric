@@ -61,12 +61,18 @@
        (extract! (lambda (v)
                    (= 0 (ndepends v))) vs))))
 
+  (define (cyclic-dependency-error vs)
+    ;; :FIXME: more kind error
+    (error "tsort: cyclic dependency detected"))
+
   (define (tsort input)
     (let ((vs (init input)))
       (let loop ((sorted ()))
         (if (null? vs)
             (map name (reverse sorted))
             (let ((frees (extract-free! vs)))
+              (if (null? frees)
+                  (cyclic-dependency-error vs))
               (for-each
                (lambda (v)
                  (undepend-vertex! v vs))
