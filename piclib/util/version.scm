@@ -21,7 +21,7 @@
         (make-version% major minor patch))))
     
     (define (string->version str)
-      (apply make-version (map string->number (string-split str))))
+      (apply make-version (map string->number (string-split #\. str))))
 
     (define (version->list v)
       (list (major v) (minor v) (patch v)))
