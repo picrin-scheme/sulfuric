@@ -70,23 +70,23 @@
     (define position
       (case-lambda
        ((char string)
-        (position char string 0 (length string)))
+        (position char string 0 (string-length string)))
        ((char string start)
-        (position char string start (length string)))
+        (position char string start (string-length string)))
        ((char string start end)
         (let loop ((i start))
           (if (= i end)
               #f
-              (if (eqv? char (string-ref))
+              (if (eqv? char (string-ref string i))
                   i
                   (loop (+ i 1))))))))
 
     (define positions
       (case-lambda
        ((char string)
-        (positions char string 0 (length string)))
+        (positions char string 0 (string-length string)))
        ((char string start)
-        (positions char string start (length string)))
+        (positions char string start (string-length string)))
        ((char string start end)
         (let loop ((i start) (acc ()))
           (let ((pos (position char string i end)))
