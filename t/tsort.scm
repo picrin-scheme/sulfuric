@@ -1,3 +1,5 @@
+(load "./piclib/util.scm")
+(load "./piclib/tsort.scm")
 (import (scheme base)
         (picrin test)
         (sulfuric tsort))

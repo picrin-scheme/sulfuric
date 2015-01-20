@@ -1,3 +1,4 @@
+(load "./piclib/util.scm")
 (import (scheme base)
         (picrin test)
         (sulfuric util))
