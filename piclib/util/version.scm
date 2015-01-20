@@ -36,9 +36,9 @@
           (if (null? v1)
               include-equal?
               (cond
-               ((op (car v1) (car v2)) #t)
                ((= (car v1) (car v2))
-                (loop (cdr v1) (cdr v2))))))))
+                (loop (cdr v1) (cdr v2)))
+               ((op (car v1) (car v2)) #t))))))
 
     (define (/= x y) (not (= x y)))
     (define (id x) x)
