@@ -46,5 +46,18 @@
 (test (list 2 4 6 8 10) (extract! even? lst))
 (test (list 1 3 5 7 9) lst)
 
+(test (list 0) (positions #\a "abcd"))
+(test (list 0 1) (positions #\a "aabcd"))
+(test () (positions #\a "bcd"))
+
+(test () (positions #\a "abcd" 1))
+(test (list 1) (positions #\a "aabcd" 1))
+(test () (positions #\a "bcd" 1))
+
+
+(test (list 0) (positions #\a "abcd" 0 1))
+(test (list 0) (positions #\a "aabcd" 0 1))
+(test () (positions #\a "bcd" 0 1))
+
 (test-end)
 
