@@ -130,6 +130,15 @@
     (if (null? list)
         init
         (fold proc (proc init (car list)) (cdr list))))
+
+  (define (string-join sep strs)
+    (if (null? strs)
+        ""
+        (apply string-append
+               (let loop ((rest strs) (acc ()))
+                 (if (null? rest)
+                     (reverse (cdr acc))
+                     (loop (cdr rest) (cons sep (cons (car rest) acc))))))))
   
   (export define-record-type-with-accessors
           push!
@@ -141,4 +150,5 @@
           always?
           some?
           zip
-          fold))
+          fold
+          string-join))
