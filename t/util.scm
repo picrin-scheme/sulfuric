@@ -65,5 +65,9 @@
 (test (list 0) (positions #\a "aabcd" 0 1))
 (test () (positions #\a "bcd" 0 1))
 
+(test (list "1" "2" "3") (string-split #\, "1.2.3"))
+(test (list "1,2,3") (string-split #\, "1,2,3"))
+(test (list "")  (string-split #\, ""))
+
 (test-end)
 
