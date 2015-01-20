@@ -31,14 +31,14 @@
     
     (define (make-version-comparator op include-equal?)
       (lambda (v1 v2)
-       (let loop ((v1 (version->list v1))
-                  (v2 (version->list v2)))
-         (if (null? v1)
-             include-equal?
-             (cond
-              ((op (car v1) (car v2)) #t)
-              ((= (car v1) (car v2))
-               (loop (cdr v1) (cdr v2))))))))
+        (let loop ((v1 (version->list v1))
+                   (v2 (version->list v2)))
+          (if (null? v1)
+              include-equal?
+              (cond
+               ((op (car v1) (car v2)) #t)
+               ((= (car v1) (car v2))
+                (loop (cdr v1) (cdr v2))))))))
 
     (define (/= x y) (not (= x y)))
     (define (id x) x)
