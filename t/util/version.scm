@@ -11,14 +11,12 @@
 (test #t (version= (make-version 1) (make-version 1)))
 (test #f (version= (make-version 1 2 3) (make-version 1 3 2)))
 (test #f (version= (make-version 1 3 3) (make-version 1 2 2)))
-(test #f (version= (make-version 1 2 3) (make-version 1 2 3)))
 
 (test #f (version/= (make-version 1 2 3) (make-version 1 2 3)))
 (test #f (version/= (make-version 1 2) (make-version 1 2)))
 (test #f (version/= (make-version 1) (make-version 1)))
 (test #t (version/= (make-version 1 2 3) (make-version 1 3 2)))
 (test #t (version/= (make-version 1 3 3) (make-version 1 2 2)))
-(test #t (version/= (make-version 1 2 3) (make-version 1 2 3)))
 
 
 (test #t (version< (make-version 1 2 3) (make-version 1 2 4)))
@@ -32,8 +30,8 @@
 (test #t (version<= (make-version 1 2 3) (make-version 1 3 2)))
 (test #f (version<= (make-version 1 3 3) (make-version 1 2 2)))
 (test #t (version<= (make-version 1 2 3) (make-version 1 2 3)))
-(test #f (version<= (make-version 1 2) (make-version 1 2)))
-(test #f (version<= (make-version 1) (make-version 1)))
+(test #t (version<= (make-version 1 2) (make-version 1 2)))
+(test #t (version<= (make-version 1) (make-version 1)))
 
 (test #f (version> (make-version 1 2 3) (make-version 1 2 4)))
 (test #f (version> (make-version 1 2 3) (make-version 1 3 2)))
