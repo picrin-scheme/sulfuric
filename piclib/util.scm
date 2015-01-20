@@ -57,14 +57,20 @@
                    (list atom))
                  ())))
           (else
-           (let loop ((rest (cdr lst)) (parent lst) (acc ()))
+           (let loop ((rest lst) (parent (cons #f lst)) (acc ()))
              (if (null? rest)
                  (reverse acc)
                  (let ((atom (car rest)))
                    (if (pred atom)
                        (begin
-                         (set-cdr! parent (cdr rest))
-                         (loop (cdr rest) parent (cons atom acc)))
+                         (if (null? (cdr rest))
+                             (begin
+                               (set! rest ())
+                               (set-cdr! parent ()))
+                             (begin
+                               (set-car! rest (car (cdr rest)))
+                               (set-cdr! rest (cdr (cdr rest)))))
+                         (loop rest parent (cons atom acc)))
                        (loop (cdr rest) (cdr parent) acc))))))))))
 
     (define position
