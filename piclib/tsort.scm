@@ -10,11 +10,11 @@
     ndepends
     depended-by)
 
-  (define (vassoqv want vertexes)
+  (define (vassoq want vertexes)
     (let loop ((rest vertexes))
       (if (null? rest)
           #f
-          (if (eqv? (name (car rest)) want)
+          (if (equal? (name (car rest)) want)
               (car rest)
               (loop (cdr rest))))))
 
@@ -24,7 +24,7 @@
   (define-syntax update-or-add
     (syntax-rules ()
       ((_ name proc! list)
-       (let ((vertex (vassoqv name list)))
+       (let ((vertex (vassoq name list)))
          (if vertex
              (proc! vertex)
              (let ((vertex (make-vertex name 0 ())))
@@ -37,7 +37,7 @@
   (define (undepend-vertex! vertex vertexes)
     (for-each
      (lambda (v)
-       (dec-ndepends! (vassoqv v vertexes)))
+       (dec-ndepends! (vassoq v vertexes)))
      (depended-by vertex)))
 
   (define (init input)
